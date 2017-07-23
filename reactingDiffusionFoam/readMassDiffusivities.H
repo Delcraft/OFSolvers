@@ -10,19 +10,16 @@ IOdictionary speciesDict
     )
 );
 
-//const wordList specieNames(speciesDict.toc());
-
 const wordList species(speciesDict.lookup("species"));
 
 const dictionary& LeDict(speciesDict.subDict("HirshfelderCurtiss"));
 
 List<dimensionedScalar> Le(species.size());
 
-//List<dimensionedScalar> Le_(specieNames.size());
+Info << "Using Hirshfelder and Curtiss approximation"
+     << " for multispecies diffusion flux" << endl;
 
 Info << "Reading mass diffusion settings for all species" << endl;
-
-//Info << species << endl;
 
 forAll(species, i)
 {
@@ -41,47 +38,58 @@ forAll(species, i)
         << "Species used in this model are: " << species << endl
         << exit(FatalError);
     }
-//    Le = subDict.lookup("Le");
 
     Info << "Le number for specie " << thisSpecie << ": " << Le[i].value() << endl;
 }
 
-List<autoPtr<volScalarField>> Dk(species.size());
-forAll(species, i)
-{
-    word nameDk ("Dk_"+species[i]);
+scalar Sht = 1.0;
 
-    forAll(Le, j)
-    {
-        if (Le[j].name() == species[i])
-        {
-            Dk[i].reset
-            (
-                new volScalarField
-                (
-                    IOobject
-                    (
-                        nameDk,
-                        runTime.timeName(),
-                        mesh,
-                        IOobject::NO_READ,
-                        IOobject::AUTO_WRITE
-                    ),
-                    thermo.alpha() / rho / Le[j].value()
-                )
-            );
-        }
-    }
+if (LeDict.found("Sht"))
+{
+    Sht = readScalar(LeDict.lookup("Sht"));
+    Info << "Sht = " << Sht << endl;
 }
-/*
+else
+{
+    Info << "Sht is not found in " << speciesDict.name() << ". Taking Sht = 1.0" << endl;
+}
+
+PtrList<volScalarField> Dk(species.size());
 forAll(species, i)
 {
-    forAll(Le, j)
-    {
-        if (Le[j].name() == species[i])
-        {
-            Info << "Test output: " << Le[j] << endl;
-        }
-    }
+    word nameDk ("Dk"+species[i]);
+
+    Dk.set
+    (
+        i,
+        new volScalarField
+        (
+            IOobject
+            (
+                nameDk,
+                runTime.timeName(),
+                mesh,
+                IOobject::NO_READ,
+                IOobject::AUTO_WRITE
+            ),
+//                    mesh,
+//                    dimensionedScalar(nameDk,dimensionSet(0,2,-1,0,0,0,0),0.0)
+            thermo.alpha() / rho / Le[i]
+        )
+    );
 }
-*/
+
+// Correction velocity
+volVectorField Vc
+(
+    IOobject
+    (
+        "Vc",
+        runTime.timeName(),
+        mesh,
+        IOobject::NO_READ,
+        IOobject::NO_WRITE
+    ),
+    mesh,
+    dimensionedVector("Vc",dimVelocity,vector(0,0,0))
+);

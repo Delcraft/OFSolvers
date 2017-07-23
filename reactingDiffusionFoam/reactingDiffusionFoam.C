@@ -60,8 +60,8 @@ int main(int argc, char *argv[])
     #include "initContinuityErrs.H"
     #include "createFields.H"
     #include "createFieldRefs.H"
+    #include "readMassDiffusivities.H"
     #include "createFvOptions.H"
-//    #include "readMassDiffusivities.H"
 
     turbulence->validate();
 

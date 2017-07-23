@@ -33,6 +33,4 @@
 
     Info<< "min/max(T) = "
         << min(T).value() << ", " << max(T).value() << endl;
-
-    Wm = Foam::constant::physicoChemical::R*T*thermo.psi();
 }

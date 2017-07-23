@@ -8,7 +8,10 @@ autoPtr<combustionModels::psiCombustionModel> reaction
 psiReactionThermo& thermo = reaction->thermo();
 thermo.validate(args.executable(), "h", "e");
 
-basicMultiComponentMixture& composition = thermo.composition();
+// Change class to get access to molecular weights
+//basicMultiComponentMixture& composition = thermo.composition();
+basicSpecieMixture& composition = thermo.composition();
+
 PtrList<volScalarField>& Y = composition.Y();
 
 word inertSpecie(thermo.lookup("inertSpecie"));
@@ -130,13 +133,11 @@ volScalarField Wm
         runTime.timeName(),
         mesh,
         IOobject::NO_READ,
-        IOobject::AUTO_WRITE
+        IOobject::NO_WRITE
     ),
-//    mesh,
-//    dimensionedScalar("Wm", dimensionSet(1,0,0,0,-1,0,0), 0.0)
-    Foam::constant::physicoChemical::R*thermo.T()*thermo.psi()
+    mesh,
+    dimensionedScalar("Wm", dimensionSet(0,0,0,0,0,0,0), 0.0)
+//    Foam::constant::physicoChemical::R*thermo.T()*thermo.psi()
 );
-
-#include "readMassDiffusivities.H"
 
 #include "createMRF.H"
