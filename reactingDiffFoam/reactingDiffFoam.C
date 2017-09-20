@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2017 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -22,10 +22,10 @@ License
     along with OpenFOAM.  If not, see <http://www.gnu.org/licenses/>.
 
 Application
-    reactingDiffusionFoam
+    reactingDiffFoam
 
 Description
-    Solver for combustion with chemical reactions taking into account multi-
+    Solver for combustion with chemical reactions which takes into account multi-
     component diffusion using Hirshfelder and Curtiss approximation.
 
     For more details, see:
@@ -41,6 +41,7 @@ Description
 #include "psiCombustionModel.H"
 #include "multivariateScheme.H"
 #include "pimpleControl.H"
+#include "pressureControl.H"
 #include "fvOptions.H"
 #include "localEulerDdtScheme.H"
 #include "fvcSmooth.H"
@@ -56,7 +57,6 @@ int main(int argc, char *argv[])
     #include "createMesh.H"
     #include "createControl.H"
     #include "createTimeControls.H"
-    #include "createRDeltaT.H"
     #include "initContinuityErrs.H"
     #include "createFields.H"
     #include "createFieldRefs.H"
@@ -119,6 +119,8 @@ int main(int argc, char *argv[])
                 turbulence->correct();
             }
         }
+
+        rho = thermo.rho();
 
         runTime.write();
 

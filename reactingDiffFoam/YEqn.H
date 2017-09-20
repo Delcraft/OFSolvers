@@ -11,8 +11,7 @@ tmp<fv::convectionScheme<scalar>> mvConvection
 
 {
     reaction->correct();
-    dQ = reaction->dQ();
-    label inertIndex = -1;
+    Qdot = reaction->Qdot();
     volScalarField Yt(0.0*Y[0]);
     volScalarField Dki(0.0*Dk[0]);
 
@@ -55,8 +54,7 @@ tmp<fv::convectionScheme<scalar>> mvConvection
 
     forAll(Y, i)
     {
-
-        if (Y[i].name() != inertSpecie)
+        if (i != inertIndex && composition.active(i))
         {
             volScalarField& Yi = Y[i];
 
@@ -100,10 +98,6 @@ tmp<fv::convectionScheme<scalar>> mvConvection
 
             Yi.max(0.0);
             Yt += Yi;
-        }
-        else
-        {
-            inertIndex = i;
         }
     }
 
