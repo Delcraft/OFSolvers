@@ -1,0 +1,30 @@
+/*--------------------------------*- C++ -*----------------------------------*\
+  =========                 |
+  \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
+   \\    /   O peration     |
+    \\  /    A nd           | Web:      www.OpenFOAM.org
+     \\/     M anipulation  |
+-------------------------------------------------------------------------------
+Description
+    Writes out values of fields from cells nearest to specified locations.
+
+\*---------------------------------------------------------------------------*/
+probes
+{
+    libs            ("libsampling.so");
+    type            probes;
+    // Name of the file with probes
+    name            probes;
+
+    writeControl    timeStep;
+    writeInterval   1;
+
+    fields (T);
+    probeLocations
+    (
+        // Axis location
+        (0.005 0 0)
+    );
+}
+
+// ************************************************************************* //

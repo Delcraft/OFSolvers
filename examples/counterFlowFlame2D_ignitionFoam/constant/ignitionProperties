@@ -1,0 +1,25 @@
+/*--------------------------------*- C++ -*----------------------------------*\
+| =========                 |                                                 |
+| \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox           |
+|  \\    /   O peration     | Version:  5.0                                   |
+|   \\  /    A nd           | Web:      www.OpenFOAM.org                      |
+|    \\/     M anipulation  |                                                 |
+\*---------------------------------------------------------------------------*/
+FoamFile
+{
+    version     2.0;
+    format      ascii;
+    class       dictionary;
+    location    "constant";
+    object      ignitionProperties;
+}
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+
+Spot1 // spot name (mupltiple spots can exist)
+{
+    eps           eps                [1 2 -2 0 0 0 0] 0.005; //ignition source
+    sigmas      sigmas          [0 1 0 0 0 0 0] 1e-4; // space scale
+    sigmat      sigmat           [0 0 1 0 0 0 0] 1e-3; // time scale
+    tmax        tmax             [0 0 1 0 0 0 0] 0.05; // time of deposition
+    location    location         [0 1 0 0 0 0 0] (0.005 0.0 0.0); // deposition spot
+};
